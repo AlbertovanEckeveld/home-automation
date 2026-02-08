@@ -1,9 +1,0 @@
-version: "3.8"
-services:
-  skybase:
-    build: .
-    volumes:
-      - ./records:/records
-      - ./config.toml:/app/config.toml:ro
-    environment:
-      - RUST_LOG=info
