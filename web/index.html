@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Skybase Surveillance</title>
+    <meta name="description" content="Skybase Surveillance control surface" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body data-cameras="cam1,cam2">
+    <div class="grain"></div>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+
+    <header class="hero">
+      <div class="badge">Live system</div>
+      <h1>Skybase Surveillance</h1>
+      <p class="lede">
+        Continuous capture, health checks, and resilient storage. Your cameras,
+        always awake.
+      </p>
+      <div class="hero-actions">
+        <button class="btn ghost" id="copy-url">Copy base URL</button>
+      </div>
+    </header>
+
+    <main class="grid">
+      <section class="panel full player">
+        <div class="player-header">
+          <div>
+            <h2>Playback</h2>
+            <p class="muted">Review recorded MP4 segments from each camera.</p>
+          </div>
+          <div class="camera-select" id="camera-select"></div>
+        </div>
+        <div class="video-wrap">
+          <video id="player-a" class="video-layer active" controls playsinline></video>
+          <video id="player-b" class="video-layer" controls playsinline></video>
+        </div>
+        <div class="timeline" id="timeline">
+          <div class="timeline-header">
+            <span class="label">Timeline</span>
+            <span class="mono" id="timeline-stamp">-</span>
+          </div>
+          <input
+            type="range"
+            id="timeline-range"
+            min="0"
+            max="0"
+            step="1"
+            value="0"
+            aria-label="Timeline"
+          />
+          <div class="timeline-footer">
+            <span class="mono" id="timeline-start">-</span>
+            <button class="btn" type="button" id="play-latest">Play latest</button>
+            <span class="mono" id="timeline-end">-</span>
+          </div>
+        </div>
+        <div class="player-meta">
+          <span class="label">Selected file</span>
+          <span class="mono" id="playlist-url">-</span>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <span>Skybase Surveillance</span>
+      <span class="mono">v1</span>
+    </footer>
+
+    <script src="app.js"></script>
+  </body>
+</html>
