@@ -1,9 +1,0 @@
-[database]
-name = "<Name of your database>"
-user = "<Name of your database user>"
-password = "<password for your database user>"
-host = "<host of your database>"
-port = 5432
-
-[app]
-records_path = "/records"
