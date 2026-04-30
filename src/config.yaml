@@ -1,12 +1,15 @@
-cameras:
-  - id: cam1
-    rtsp_url: rtsp://10.10.0.134:554/live
-    segment_time: 10
-    output_dir: /mnt/recordings/cam1
-  - id: cam2
-    rtsp_url: rtsp://10.10.0.134:554/live
-    segment_time: 10
-    output_dir: /mnt/recordings/cam2
+default_storage_folder: /home/alberto-adm/records
 
-# rtsp_url: rtsp://admin:@lberto-homelab@10.40.0.11/Streaming/channels/101
-# rtsp_url: rtsp://admin:@lberto-homelab@10.40.0.12/Streaming/channels/101
+cameras:
+#  - id: cam1
+#    rtsp_url: rtsp://admin:@lb3rt0-Homelab@10.40.0.11:554/live
+#    segment_time: 10
+  - id: cam2
+    rtsp_url: rtsp://admin:@lb3rt0-Homelab@10.40.0.12/Streaming/channels/101
+    segment_time: 10
+
+# Optioneel: override output_dir per camera als je een andere map wilt gebruiken.
+# output_dir: /mnt/other-disk/cam2
+
+# rtsp_url: rtsp://admin:@lb3rt0-Homelab@10.40.0.11/Streaming/channels/101
+# rtsp_url: rtsp://admin:@lb3rt0-homelab@10.40.0.12/Streaming/channels/101

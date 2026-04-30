@@ -1,0 +1,17 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Connect to AlbertoVE",
+        "description": "Enter the host and port of your AlbertoVE NVR.",
+        "data": {
+          "host": "Host",
+          "port": "Port"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Cannot connect"
+    }
+  }
+}

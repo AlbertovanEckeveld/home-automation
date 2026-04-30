@@ -6,12 +6,29 @@ use std::sync::atomic::{AtomicBool, Ordering};
 use std::time::{Duration, Instant};
 use tracing::{error, info, warn};
 
+use crate::api::{CameraInfo, CameraStore};
 use crate::config::camera::CameraConfig;
 use crate::recorder::ffmpeg::start_recorder;
 use crate::storage::local::start_indexer;
 
-pub fn monitor_camera(cam: CameraConfig) {
+fn set_status(store: &CameraStore, cam: &CameraConfig, status: &str) {
+    if let Ok(mut map) = store.write() {
+        map.insert(cam.id.clone(), CameraInfo {
+            id: cam.id.clone(),
+            status: status.to_string(),
+            output_dir: cam
+                .output_dir
+                .as_ref()
+                .expect("output_dir must be resolved before set_status")
+                .clone(),
+        });
+    }
+}
+
+pub fn monitor_camera(cam: CameraConfig, store: CameraStore) {
     start_indexer(cam.clone());
+
+    set_status(&store, &cam, "offline");
 
     std::thread::spawn(move || loop {
         info!("Starting recorder for {}", cam.id);
@@ -41,9 +58,15 @@ pub fn monitor_camera(cam: CameraConfig) {
                     });
                 }
 
+                set_status(&store, &cam, "recording");
+
                 let start = Instant::now();
                 let grace = Duration::from_secs(u64::from(cam.segment_time).saturating_mul(2).max(15));
-                let output_dir = PathBuf::from(&cam.output_dir);
+                let output_dir = PathBuf::from(
+                    cam.output_dir
+                        .as_ref()
+                        .expect("output_dir must be resolved before monitor loop"),
+                );
 
                 loop {
                     if let Ok(Some(status)) = child.try_wait() {
@@ -81,6 +104,7 @@ pub fn monitor_camera(cam: CameraConfig) {
                     }
 
                     if should_restart {
+                        set_status(&store, &cam, "offline");
                         let _ = child.kill();
                         let _ = child.wait();
                         break;
@@ -91,6 +115,7 @@ pub fn monitor_camera(cam: CameraConfig) {
             }
             Err(err) => {
                 error!("Failed to start recorder for {}: {}", cam.id, err);
+                set_status(&store, &cam, "offline");
             }
         }
 

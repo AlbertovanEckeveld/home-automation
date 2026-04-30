@@ -1,0 +1,24 @@
+# go2rtc configuration for WebRTC streaming to Home Assistant
+# Place this file in the NVR container or Docker volume
+# go2rtc will read HLS playlists and expose WebRTC streams
+
+streams:
+  # Dynamic streams: go2rtc proxies HLS → WebRTC
+  # These will be populated at runtime via environment or config
+  # Format: camera_id: http://nvr:8080/api/cameras/{camera_id}/stream/playlist.m3u8
+
+webrtc:
+  # WebRTC server configuration
+  listen: :8555
+  # Allow connections from any origin (safe within Docker network)
+  candidates:
+    - mode: auto
+
+api:
+  # API server for stream management
+  listen: :1984
+
+# Log level
+log:
+  level: info
+

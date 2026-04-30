@@ -1,6 +1,6 @@
-# 🌌 Skybase Surveillance
+# 🌌 AlbertoVE
 
-**Skybase Surveillance** is a high-performance, Rust-based application for **automated RTSP camera health checking** and **minute-based video recording**. It stores recordings in a structured directory format and uses **PostgreSQL** for camera stream management.
+**AlbertoVE** is a high-performance, Rust-based application for **automated RTSP camera health checking** and **minute-based video recording**. It stores recordings in a structured directory format and uses **PostgreSQL** for camera stream management.
 
 ---
 
@@ -67,7 +67,7 @@ Native (Windows or Linux)
 
 ## 📁 Project Structure
 ```plaintext
-skybase-surveillance/
+albertove-cloud/
 ├── src/
 │   ├── config.rs      # Loads config from config.toml
 │   ├── recorder.rs    # RTSP health checks & recording

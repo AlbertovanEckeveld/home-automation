@@ -18,7 +18,11 @@ pub fn start_indexer(cam: CameraConfig) {
 }
 
 fn update_index(cam: &CameraConfig) -> Result<()> {
-	let output_dir = PathBuf::from(&cam.output_dir);
+	let output_dir = PathBuf::from(
+		cam.output_dir
+			.as_ref()
+			.expect("output_dir must be resolved before update_index"),
+	);
 	std::fs::create_dir_all(&output_dir)
 		.with_context(|| format!("Failed to create output dir {}", output_dir.display()))?;
 

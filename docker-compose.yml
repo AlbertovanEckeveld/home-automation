@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  # Skybase NVR (je huidge service)
+  nvr:
+    build: .
+    ports:
+      - "8080:8080"  # NVR web + API
+    volumes:
+      - ./recordings:/recordings
+      - ./config.yaml:/app/config.yaml
+    environment:
+      SKYBASE_STORAGE_ROOT: /recordings
+      SKYBASE_WEB_ADDR: 0.0.0.0:8080
+    networks:
+      - skybase
+
+  # Go2rtc: HLS → WebRTC proxy
+  go2rtc:
+    image: alexxit/go2rtc:latest
+    ports:
+      - "8555:8555"  # WebRTC
+      - "1984:1984"  # go2rtc API
+    volumes:
+      - ./go2rtc.yaml:/config.yaml
+    environment:
+      GO2RTC_CONFIG: /config.yaml
+    depends_on:
+      - nvr
+    networks:
+      - skybase
+    command: -config /config.yaml
+
+networks:
+  skybase:
+    driver: bridge
+
