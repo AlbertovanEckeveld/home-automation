@@ -65,7 +65,7 @@ else
     print_info "Docker wordt gedownload en geïnstalleerd..."
 
     # Install required packages
-    apt-get install -y ca-certificates curl gnupg lsb-release
+    apt-get install -y ca-certificates curl gnupg lsb-release build-essential
 
     # Add Docker GPG key
     mkdir -p /etc/apt/keyrings

@@ -1,23 +1,47 @@
 version: '3.8'
 
 services:
-  # Skybase NVR (je huidge service)
-  nvr:
+  # AlbertoVE NVR
+  albertove:
+    container_name: albertove
     build: .
+    restart: unless-stopped
     ports:
       - "8080:8080"  # NVR web + API
     volumes:
-      - ./recordings:/recordings
+      - /mnt/recordings:/recordings
       - ./config.yaml:/app/config.yaml
     environment:
-      SKYBASE_STORAGE_ROOT: /recordings
-      SKYBASE_WEB_ADDR: 0.0.0.0:8080
+      STORAGE_ROOT: /recordings
+      WEB_ADDR: 0.0.0.0:8080
+    depends_on:
+      - mqtt
     networks:
-      - skybase
+      - home_automation
+
+  homeassistant:
+    container_name: homeassistant
+    image: homeassistant/home-assistant:latest
+    restart: unless-stopped
+    privileged: true
+    ports:
+      - "8123:8123"
+    volumes:
+      - ha_config:/config
+      - /etc/localtime:/etc/localtime:ro
+      - /run/dbus:/run/dbus:ro
+    environment:
+      TZ: "Europe/Amsterdam"
+    depends_on:
+      - albertove
+    networks:
+      - home_automation
 
   # Go2rtc: HLS → WebRTC proxy
   go2rtc:
+    container_name: go2rtc
     image: alexxit/go2rtc:latest
+    restart: unless-stopped
     ports:
       - "8555:8555"  # WebRTC
       - "1984:1984"  # go2rtc API
@@ -26,12 +50,32 @@ services:
     environment:
       GO2RTC_CONFIG: /config.yaml
     depends_on:
-      - nvr
+      - albertove
     networks:
-      - skybase
+      - home_automation
     command: -config /config.yaml
 
+  mqtt:
+    container_name: mqtt
+    image: eclipse-mosquitto:latest
+    restart: unless-stopped
+    volumes:
+      - mqtt_data:/mosquitto/data
+      - mqtt_config:/mosquitto/config
+      - mqtt_log:/mosquitto/log
+    ports:
+      - "1883:1883"   # MQTT
+      - "9001:9001"   # WebSockets (optioneel)
+    networks:
+      - home_automation
+
+volumes:
+  ha_config:
+  mqtt_data:
+  mqtt_config:
+  mqtt_log:
+
 networks:
-  skybase:
+  home_automation:
     driver: bridge
 
