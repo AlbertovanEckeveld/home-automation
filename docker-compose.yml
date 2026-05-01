@@ -2,22 +2,22 @@ version: '3.8'
 
 services:
   # AlbertoVE NVR
-  albertove:
-    container_name: albertove
-    build: .
-    restart: unless-stopped
-    ports:
-      - "8080:8080"  # NVR web + API
-    volumes:
-      - /mnt/recordings:/recordings
-      - ./config.yaml:/app/config.yaml
-    environment:
-      STORAGE_ROOT: /recordings
-      WEB_ADDR: 0.0.0.0:8080
-    depends_on:
-      - mqtt
-    networks:
-      - home_automation
+#  albertove:
+#    container_name: albertove
+#    build: .
+#    restart: unless-stopped
+#    ports:
+#      - "8080:8080"  # NVR web + API
+#    volumes:
+#      - /mnt/recordings:/recordings
+#      - ./config.yaml:/app/config.yaml
+#    environment:
+#      STORAGE_ROOT: /recordings
+#      WEB_ADDR: 0.0.0.0:8080
+#    depends_on:
+#      - mqtt
+#    networks:
+#      - home_automation
 
   homeassistant:
     container_name: homeassistant
@@ -33,7 +33,8 @@ services:
     environment:
       TZ: "Europe/Amsterdam"
     depends_on:
-      - albertove
+      - mqtt
+#      - albertove
     networks:
       - home_automation
 
@@ -49,8 +50,8 @@ services:
       - ./go2rtc.yaml:/config.yaml
     environment:
       GO2RTC_CONFIG: /config.yaml
-    depends_on:
-      - albertove
+#    depends_on:
+#      - albertove
     networks:
       - home_automation
     command: -config /config.yaml
