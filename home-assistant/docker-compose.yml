@@ -1,0 +1,48 @@
+#version: '3.8'
+
+services:
+
+  homeassistant:
+    container_name: homeassistant
+    image: homeassistant/home-assistant:latest
+    restart: unless-stopped
+    network_mode: host
+    privileged: true
+    volumes:
+      - ha_config:/config
+      - /etc/localtime:/etc/localtime:ro
+      - /run/dbus:/run/dbus:ro
+    environment:
+      TZ: "Europe/Amsterdam"
+
+  chrony:
+    image: cturra/ntp:latest
+    container_name: chrony
+    restart: unless-stopped
+    ports:
+      - "123:123/udp"
+    environment:
+      - NTP_SERVERS=0.nl.pool.ntp.org,1.nl.pool.ntp.org,2.nl.pool.ntp.org,3.nl.pool.ntp.org
+    cap_add:
+      - SYS_TIME
+    read_only: true
+
+  nut:
+    image: instantlinux/nut-upsd:latest
+    container_name: nut
+    restart: unless-stopped
+    ports:
+      - "3493:3493"
+    devices:
+      - /dev/bus/usb:/dev/bus/usb
+    volumes:
+      - ./configs/nut:/etc/nut
+    environment:
+      - DRIVER=usbhid-ups
+      - PORT=auto
+      - UPS_NAME=ups
+    privileged: true
+
+volumes:
+  ha_config:
+

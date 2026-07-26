@@ -7,3 +7,5 @@
 /.DS_Store
 ./config.toml
 /Cargo.lock
+home-assistant/configs/nut/.env
+home-assistant/configs/frigate/.env
