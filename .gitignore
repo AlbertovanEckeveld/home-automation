@@ -9,3 +9,4 @@
 /Cargo.lock
 home-assistant/configs/nut/.env
 home-assistant/configs/frigate/.env
+frigate/config/.jwt_secret
