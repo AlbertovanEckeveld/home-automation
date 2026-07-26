@@ -1,5 +1,5 @@
 mqtt:
-  enabled: false
+  enabled: true
 
 ffmpeg:
   input_args: preset-rtsp-generic
