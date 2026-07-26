@@ -38,10 +38,34 @@ services:
     volumes:
       - ./configs/nut:/etc/nut
     environment:
+      - ADMIN_USER=${NUT_ADMIN_USER}
+      - ADMIN_PASSWORD=${NUT_ADMIN_PASSWORD}
       - DRIVER=usbhid-ups
       - PORT=auto
       - UPS_NAME=ups
     privileged: true
+
+  frigate:
+    container_name: frigate
+    privileged: true
+    restart: unless-stopped
+    image: ghcr.io/blakeblackshear/frigate:stable
+    shm_size: "64mb"  # Increase to 128mb+ for more cameras
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ./config:/config
+      - ./storage:/media/frigate
+      - type: tmpfs
+        target: /tmp/cache
+        tmpfs:
+          size: 1000000000  # 1GB RAM cache
+    ports:
+      - "5000:5000"      # Web UI
+      - "8554:8554"      # RTSP feeds
+      - "8555:8555/tcp"  # WebRTC
+      - "8555:8555/udp"  # WebRTC
+    environment:
+      - FRIGATE_RTSP_PASSWORD=${FRIGATE_RTSP_PASSWORD}
 
 volumes:
   ha_config:

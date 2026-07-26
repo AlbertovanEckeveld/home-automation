@@ -14,20 +14,20 @@ objects:
 record:
   enabled: true
   retain:
-    days: 7        # Keep all recordings for 7 days
+    days: 30        # Keep all recordings for 30 days
     mode: motion   # Only record when motion detected
 
 cameras:
-  front_door:
+  front_garden:
     enabled: true
     ffmpeg:
       inputs:
         # Main stream for recording (high quality)
-        - path: rtsp://admin:YOUR_PASSWORD@CAMERA_IP:554/h265Preview_01_main
+        - path: rtsp://${CAM2_ADMIN_USER}:${CAM2_ADMIN_PASSWORD}@${CAM2_IP}:554/${CAM2_RTSP_MAIN_STREAM}
           roles:
             - record
         # Sub stream for detection (low quality = less CPU)
-        - path: rtsp://admin:YOUR_PASSWORD@CAMERA_IP:554/h265Preview_01_sub
+        - path: rtsp://${CAM2_ADMIN_USER}:${CAM2_ADMIN_PASSWORD}@${CAM2_IP}:554/${CAM2_RTSP_SUB_STREAM}
           roles:
             - detect
     detect:
@@ -47,3 +47,32 @@ cameras:
           days: 7
         pre_capture: 3
         post_capture: 3
+#  backyard:
+#    enabled: false
+#    ffmpeg:
+#      inputs:
+#        # Main stream for recording (high quality)
+#        - path: rtsp://${CAM1_ADMIN_USER}:${CAM1_ADMIN_PASSWORD}@${CAM1_IP}:554/${CAM1_RTSP_MAIN_STREAM}
+#          roles:
+#            - record
+#        # Sub stream for detection (low quality = less CPU)
+#        - path: rtsp://${CAM1_ADMIN_USER}:${CAM1_ADMIN_PASSWORD}@${CAM1_IP}:554/${CAM1_RTSP_SUB_STREAM}
+#          roles:
+#            - detect
+#    detect:
+#      enabled: true
+#      width: 896
+#      height: 512
+#      fps: 5
+#    record:
+#      enabled: true
+#      alerts:
+#        retain:
+#          days: 14  # Keep important detections longer
+#        pre_capture: 5
+#        post_capture: 5
+#      detections:
+#        retain:
+#          days: 7
+#        pre_capture: 3
+#        post_capture: 3
