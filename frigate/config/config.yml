@@ -23,11 +23,11 @@ cameras:
     ffmpeg:
       inputs:
         # Main stream for recording (high quality)
-        - path: rtsp://${CAM2_ADMIN_USER}:${CAM2_ADMIN_PASSWORD}@${CAM2_IP}:554/${CAM2_RTSP_MAIN_STREAM}
+        - path: rtsp://admin:@lb3rt0-Homelab@10.40.0.12:554/Streaming/Channels/101
           roles:
             - record
         # Sub stream for detection (low quality = less CPU)
-        - path: rtsp://${CAM2_ADMIN_USER}:${CAM2_ADMIN_PASSWORD}@${CAM2_IP}:554/${CAM2_RTSP_SUB_STREAM}
+        - path: rtsp://admin:@lb3rt0-Homelab@10.40.0.12:554/Streaming/Channels/202
           roles:
             - detect
     detect:
