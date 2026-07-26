@@ -3,8 +3,8 @@ void startSluiten() {                                                     // fun
 
   Serial.println("Sluit opdracht");
 
-  //motor1.dichtBevestigd = false;
-  //motor2.dichtBevestigd = false;
+  motor1.dichtBevestigd = false;
+  motor2.dichtBevestigd = false;
 
   startMotor1Dicht();                                                     // functie die motor1 laat draaien
   startMotor2Dicht();                                                     // functie die motor2 laat draaien
