@@ -1,6 +1,0 @@
-[admin]
-password = ${NUT_ADMIN_PASSWORD}
-
-[homeassistant]
-password = ${NUT_HA_PASSWORD}
-upsmon primary

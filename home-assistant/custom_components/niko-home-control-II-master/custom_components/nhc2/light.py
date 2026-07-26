@@ -1,0 +1,90 @@
+"""Support for NHC2 lights."""
+import logging
+
+import voluptuous as vol
+
+from homeassistant.const import CONF_USERNAME
+from homeassistant.helpers import entity_platform
+
+from .nhccoco.coco import CoCo
+
+from .entities.color_action_light import Nhc2ColorActionLightEntity
+from .entities.relay_action_light import Nhc2RelayActionLightEntity
+from .entities.tunablewhite_action_light import Nhc2TunablewhiteActionLightEntity
+from .entities.tunablewhiteandcolor_action_light import Nhc2TunablewhiteandcolorActionLightEntity
+from .nhccoco.devices.color_action import CocoColorAction
+from .nhccoco.devices.light_action import CocoLightAction
+from .nhccoco.devices.dimmer_action import CocoDimmerAction
+from .nhccoco.devices.tunablewhite_action import CocoTunablewhiteAction
+from .nhccoco.devices.tunablewhiteandcolor_action import CocoTunablewhiteandcolorAction
+
+from .const import DOMAIN, KEY_GATEWAY, SERVICE_SET_LIGHT_BRIGHTNESS, ATTR_LIGHT_BRIGHTNESS, SERVICE_SET_LIGHT_COLOR, \
+    ATTR_LIGHT_COLOR
+
+KEY_ENTITY = 'nhc2_lights'
+
+_LOGGER = logging.getLogger(__name__)
+
+
+async def async_setup_entry(hass, config_entry, async_add_entities):
+    _LOGGER.info('Configuring lights')
+
+    hass.data.setdefault(KEY_ENTITY, {})[config_entry.entry_id] = []
+
+    gateway: CoCo = hass.data[KEY_GATEWAY][config_entry.entry_id]
+    hub = (DOMAIN, config_entry.data[CONF_USERNAME])
+
+    device_instances = []
+    device_instances += gateway.get_device_instances(CocoLightAction)
+    device_instances += gateway.get_device_instances(CocoDimmerAction)
+
+    _LOGGER.info('→ Found %s NHC Relay Actions (light) and Dimmer Actions', len(device_instances))
+    if len(device_instances) > 0:
+        entities = []
+        for device_instance in device_instances:
+            entities.append(Nhc2RelayActionLightEntity(device_instance, hub, gateway))
+
+        async_add_entities(entities)
+
+    device_instances = gateway.get_device_instances(CocoColorAction)
+    _LOGGER.info('→ Found %s Color action', len(device_instances))
+    if len(device_instances) > 0:
+        entities = []
+        for device_instance in device_instances:
+            entities.append(Nhc2ColorActionLightEntity(device_instance, hub, gateway))
+
+        async_add_entities(entities)
+
+    device_instances = gateway.get_device_instances(CocoTunablewhiteAction)
+    _LOGGER.info('→ Found %s Tunable white action', len(device_instances))
+    if len(device_instances) > 0:
+        entities = []
+        for device_instance in device_instances:
+            entities.append(Nhc2TunablewhiteActionLightEntity(device_instance, hub, gateway))
+
+        async_add_entities(entities)
+
+    device_instances = gateway.get_device_instances(CocoTunablewhiteandcolorAction)
+    _LOGGER.info('→ Found %s Tunable white and color action', len(device_instances))
+    if len(device_instances) > 0:
+        entities = []
+        for device_instance in device_instances:
+            entities.append(Nhc2TunablewhiteandcolorActionLightEntity(device_instance, hub, gateway))
+
+        async_add_entities(entities)
+
+    platform = entity_platform.async_get_current_platform()
+    platform.async_register_entity_service(
+        SERVICE_SET_LIGHT_BRIGHTNESS,
+        {
+            vol.Required(ATTR_LIGHT_BRIGHTNESS): vol.Range(0, 100)
+        },
+        '_service_set_light_brightness',
+    )
+    platform.async_register_entity_service(
+        SERVICE_SET_LIGHT_COLOR,
+        {
+            vol.Required(ATTR_LIGHT_COLOR): vol.All(vol.Coerce(list), vol.Length(min=3, max=3)),
+        },
+        '_service_set_light_color',
+    )

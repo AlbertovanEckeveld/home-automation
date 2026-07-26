@@ -1,0 +1,82 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Connect to your Niko Connected Controller II",
+        "description": "Configuring controller **{host}**.\n\nThere are 2 ways to authenticate:\n1. Activate the 'Niko Hobby API' in the Connected Services through the Niko Home Control programming software.\n2. Use a touchscreen profile.\n\n'Niko Hobby API' is the easiest method, but you will need to reauthenticate once a year. Touchscreen profiles can be created in the 'Niko Home Control programming software' under Dashboard → Touchscreens.",
+        "data": {
+          "username": "Profile",
+          "password": "Password",
+          "switches_as_lights": "Import switches (relays) as lights"
+        }
+      },
+      "host": {
+        "title": "Choose a Niko Connected Controller II",
+        "description": "If you use an IP address, make sure it does not change.",
+        "data": {
+          "host": "Controller"
+        }
+      },
+      "manual_host": {
+        "title": "Niko Connected Controller II",
+        "description": "Provide the host or IP address for the Niko Connected Controller II. If you use an IP address, make sure it does not change.",
+        "data": {
+          "host": "Address/IP"
+        }
+      },
+      "statistics_options": {
+        "title": "Statistics Configuration",
+        "description": "Configure how measurements should be retrieved from your controller **{host}**.\n\n**Enable Statistics**: Periodically retrieves measurement data via REST API and imports as statistics.\n\n**Import Statistics**: One-time import of long term data (up to 10 years back as daily aggregates, last two months as hourlies).\n\n**Note**: Long term import can take some time depending on how much data is available. Recent data will be updated automatically every hour if statistics are enabled.",
+        "data": {
+          "enable_statistics": "Enable statistics",
+          "import_statistics": "Import statistics"
+        }
+      }
+    },
+    "abort": {
+      "single_instance_allowed": "This controller and profile was already added. You can only add it once.",
+      "no_controller_found": "No controller was found."
+    },
+    "error": {
+      "login_check_fail_1": "Connection refused - incorrect protocol version",
+      "login_check_fail_2": "Connection refused - invalid client identifier",
+      "login_check_fail_3": "Connection refused - server unavailable",
+      "login_check_fail_4": "Connection refused - bad username or password",
+      "login_check_fail_5": "Connection refused - not authorised"
+    }
+  },
+  "issues": {
+    "not_authorised": {
+      "title": "Authentication failed",
+      "fix_flow": {
+        "step": {
+          "confirm": {
+            "title": "Authentication failed",
+            "description": "We could not authenticate with the given credentials.\n\nProbably your Niko Hobby API has expired. Please retrieve a new password via the Connected Services in the Niko Home Control programming software.\n\nHome Assistant will be restarted afterwards.",
+            "data": {
+              "password": "Password"
+            }
+          }
+        },
+        "error": {
+          "login_check_fail_1": "Connection refused - incorrect protocol version",
+          "login_check_fail_2": "Connection refused - invalid client identifier",
+          "login_check_fail_3": "Connection refused - server unavailable",
+          "login_check_fail_4": "Connection refused - bad username or password",
+          "login_check_fail_5": "Connection refused - not authorised"
+        }
+      }
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Statistics Options",
+        "description": "Configure statistics settings.\n\n**Enable Statistics**: Toggle to enable or disable data retrieval. Changes take effect immediately.",
+        "data": {
+          "enable_statistics": "Enable statistics"
+        }
+      }
+    }
+  }
+}

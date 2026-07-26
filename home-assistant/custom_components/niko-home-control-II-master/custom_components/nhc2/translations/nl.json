@@ -1,0 +1,140 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Verbinden met je installatie",
+        "description": "Controller **{host}** configureren.\n\nJe kan de 'Niko Hobby API' activeren bij Geconnecteerde services in de Niko Home Control programming software.",
+        "data": {
+          "username": "Gebruikersnaam",
+          "password": "Wachtwoord"
+        }
+      },
+      "host": {
+        "title": "Verbinden met je installatie",
+        "description": "Geef de hostname of IP-adres op van je controller op. Als je een IP-adres gebruikt, zorg ervoor dat het statisch is en niet kan veranderen.",
+        "data": {
+          "host": "Adres/IP"
+        }
+      },
+      "reconfigure": {
+        "title": "Herconfigureer je installatie",
+        "description": "Controller **{host}** herconfigureren.\n\nJe huidige Hobby API token zal vervallen op **{expiration}**\n",
+        "data": {
+          "username": "Gebruikersnaam",
+          "password": "Wachtwoord"
+        }
+      },
+      "reconfigure_use_token": {
+        "title": "Herconfigureer je installatie",
+        "description": "Reconfiguring controller **{host}**.\n\nWegens toekomstige cybersecurity regelgeving zal het niet langer mogelijk zijn om je Niko Home Control installatie met een gebruikersnaam/wachtwoord te bedienen na de 2.23 release. Schakel over op token-based authenticatie.\n\nEen Hobby API token kan aangevraagd worden via Geconnecteerde Services in de Niko Home Control programmeer software.",
+        "data": {
+          "username": "Gebruikersnaam",
+          "password": "Wachtwoord"
+        }
+      },
+      "statistics_options": {
+        "title": "Statistieken Configuratie",
+        "description": "Configureer hoe metingen worden opgehaald van je controller **{host}**.\n\n**Statistieken inschakelen**: Haalt meetgegevens periodiek op via REST API en importeert als statistieken.\n\n**Statistieken importeren**: Eenmalige import van langetermijndata (tot 10 jaar terug als dagelijkse aggregaten, laatste twee maanden als uurlijkse).\n\n**Let op**: Langetermijnimport kan enige tijd duren afhankelijk van hoeveel data beschikbaar is. Recente data wordt automatisch elk uur bijgewerkt als statistieken zijn ingeschakeld.",
+        "data": {
+          "enable_statistics": "Statistieken inschakelen",
+          "import_statistics": "Statistieken importeren"
+        }
+      }
+    },
+    "abort": {
+      "single_instance_allowed": "Deze controller is reeds toegevoegd. Je kan deze geen 2 keer toevoegen.",
+      "no_controller_found": "Geen controller gevonden.",
+      "reconfigure_successful": "Herconfiguratie geslaagd."
+    },
+    "error": {
+      "login_check_fail_1": "Verbinding geweigerd - onjuiste protocolversie",
+      "login_check_fail_2": "Verbinding geweigerd - ongeldige client-ID",
+      "login_check_fail_3": "Verbinding geweigerd - server niet beschikbaar",
+      "login_check_fail_4": "Verbinding geweigerd - onjuiste gebruikersnaam of wachtwoord",
+      "login_check_fail_5": "Verbinding geweigerd - niet geautoriseerd",
+      "password_not_a_token": "Het ingegeven wachtwoord is geen geldig token"
+    }
+  },
+  "issues": {
+    "not_authorised": {
+      "title": "Opnieuw aanmelden vereist",
+      "fix_flow": {
+        "step": {
+          "confirm": {
+            "title": "Opnieuw aanmelden vereist",
+            "description": "We konden niet aanmelden bij **{host}**\n\nVermoedelijk is je Niko Hobby API wachtwoord verlopen. Haal een nieuw wachtwoord op via Geconnecteerde Services in de Niko Home Control programmeer software.",
+            "data": {
+              "username": "Gebruikersnaam",
+              "password": "Wachtwoord"
+            }
+          }
+        },
+        "error": {
+          "login_check_fail_1": "Verbinding geweigerd - onjuiste protocolversie",
+          "login_check_fail_2": "Verbinding geweigerd - ongeldige client-ID",
+          "login_check_fail_3": "Verbinding geweigerd - server niet beschikbaar",
+          "login_check_fail_4": "Verbinding geweigerd - onjuiste gebruikersnaam of wachtwoord",
+          "login_check_fail_5": "Verbinding geweigerd - niet geautoriseerd",
+          "password_not_a_token": "Het ingegeven wachtwoord is geen geldig token"
+        }
+      }
+    },
+    "token_about_to_expire": {
+      "title": "Je token gaat binnenkort verlopen",
+      "fix_flow": {
+        "step": {
+          "confirm": {
+            "title": "Je token gaat binnenkort verlopen",
+            "description": "Je wachtwoord gaat binnenkort verlopen (**{expiration}**). Haal een nieuw wachtwoord op via Geconnecteerde Services in de Niko Home Control programmeer software.",
+            "data": {
+              "username": "Gebruikersnaam",
+              "password": "Wachtwoord"
+            }
+          }
+        },
+        "error": {
+          "login_check_fail_1": "Verbinding geweigerd - onjuiste protocolversie",
+          "login_check_fail_2": "Verbinding geweigerd - ongeldige client-ID",
+          "login_check_fail_3": "Verbinding geweigerd - server niet beschikbaar",
+          "login_check_fail_4": "Verbinding geweigerd - onjuiste gebruikersnaam of wachtwoord",
+          "login_check_fail_5": "Verbinding geweigerd - niet geautoriseerd",
+          "password_not_a_token": "Het ingegeven wachtwoord is geen geldig token"
+        }
+      }
+    },
+    "migrate_to_token_auth": {
+      "title": "Schakel over op token-based authenticatie",
+      "fix_flow": {
+        "step": {
+          "confirm": {
+            "title": "Schakel over op token-based authenticatie",
+            "description": "Wegens toekomstige cybersecurity regelgeving zal het niet langer mogelijk zijn om je Niko Home Control installatie met een username/paswoord te bedienen na de 2.23 release. Schakel over op token-based authenticatie.\n\nEen Hobby API token kan aangevraagd worden via Geconnecteerde services in de Niko Home Control programming software.",
+            "data": {
+              "username": "Gebruikersnaam",
+              "password": "Wachtwoord"
+            }
+          }
+        },
+        "error": {
+          "login_check_fail_1": "Verbinding geweigerd - onjuiste protocolversie",
+          "login_check_fail_2": "Verbinding geweigerd - ongeldige client-ID",
+          "login_check_fail_3": "Verbinding geweigerd - server niet beschikbaar",
+          "login_check_fail_4": "Verbinding geweigerd - onjuiste gebruikersnaam of wachtwoord",
+          "login_check_fail_5": "Verbinding geweigerd - niet geautoriseerd",
+          "password_not_a_token": "Het ingegeven wachtwoord is geen geldig token"
+        }
+      }
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Statistieken Opties",
+        "description": "Configureer statistieken instellingen.\n\n**Statistieken inschakelen**: Schakel in of uit om gegevens op te halen. Wijzigingen worden onmiddellijk van kracht.",
+        "data": {
+          "enable_statistics": "Statistieken inschakelen"
+        }
+      }
+    }
+  }
+}
