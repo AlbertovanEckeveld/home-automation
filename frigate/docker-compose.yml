@@ -7,7 +7,7 @@ services:
     privileged: true
     restart: unless-stopped
     image: ghcr.io/blakeblackshear/frigate:stable
-    shm_size: "64mb"  # Increase to 128mb+ for more cameras
+    shm_size: "132mb"  # Increase to 128mb+ for more cameras
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - ./config:/config
