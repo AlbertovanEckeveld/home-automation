@@ -1,5 +1,9 @@
 mqtt:
   enabled: true
+  host: 10.30.0.254
+  port: 1883
+  user: "frigate"
+  password: "@lb3rt0-Frigate"
 
 ffmpeg:
   input_args: preset-rtsp-generic
