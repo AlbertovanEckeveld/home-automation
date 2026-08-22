@@ -89,7 +89,7 @@ VoerMoment schema[] = {                                             // Schema wa
   {4, 0}                                                            // Open: 03:00 Dicht: 03:20
 };
 
-const int VOER_DUUR_MINUTEN = 10;                                   // hoelang de klep open is
+const int VOER_DUUR_MINUTEN = 15;                                   // hoelang de klep open is
 
 void setup() {                                                      // stukje opstart code
   Serial.begin(115200);
