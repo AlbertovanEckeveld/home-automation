@@ -12,5 +12,5 @@ home-assistant/configs/frigate/.env
 home-assistant/configs/mqtt/data/mosquitto.db
 home-assistant/configs/mqtt/data/
 frigate/config/*
-!frigate/config/config.yaml
+!frigate/config/config.example
 
