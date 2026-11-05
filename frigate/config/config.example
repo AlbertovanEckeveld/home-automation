@@ -1,0 +1,96 @@
+mqtt:
+  enabled: true
+  host: 
+  port: 1883
+  user: frigate
+  password: ''
+
+ffmpeg:
+  input_args: preset-rtsp-generic
+
+objects:
+  track:
+    - person
+    - car
+    - dog
+
+# Global recording settings
+record:
+  enabled: true
+  continuous:
+    days: 0
+  motion:
+    days: 30
+cameras:
+  front_garden:
+    enabled: true
+    ffmpeg:
+      inputs:
+        # Main stream for recording (high quality)
+        - path: 
+            rtsp://admin:passwordb@10.40.0.12:554/Streaming/Channels/101
+          roles:
+            - record
+        # Sub stream for detection (low quality = less CPU)
+        - path: 
+            rtsp://admin:password@10.40.0.12:554/Streaming/Channels/202
+          roles:
+            - detect
+    detect:
+      enabled: true
+      width: 896
+      height: 512
+      fps: 5
+    record:
+      enabled: true
+      alerts:
+        retain:
+          days: 14  # Keep important detections longer
+        pre_capture: 5
+        post_capture: 5
+      detections:
+        retain:
+          days: 7
+        pre_capture: 3
+        post_capture: 3
+#  backyard:
+#    enabled: false
+#    ffmpeg:
+#      inputs:
+        # Main stream for recording (high quality)
+#        - path: rtsp://admin:password@10.40.0.11:554/Streaming/Channels/101
+#          roles:
+#            - record
+        # Sub stream for detection (low quality = less CPU)
+#        - path: rtsp://admin:password@10.40.0.11:554/Streaming/Channels/202
+#          roles:
+#            - detect
+#    detect:
+#      enabled: true
+#      width: 896
+#      height: 512
+#      fps: 5
+#    record:
+#      enabled: true
+#      alerts:
+#        retain:
+#          days: 14  # Keep important detections longer
+#        pre_capture: 5
+#        post_capture: 5
+#      detections:
+#        retain:
+#          days: 7
+#        pre_capture: 3
+#        post_capture: 3
+version: 0.17-0
+semantic_search:
+  enabled: true
+  model_size: small
+face_recognition:
+  enabled: false
+  model_size: small
+lpr:
+  enabled: false
+classification:
+  bird:
+    enabled: false
