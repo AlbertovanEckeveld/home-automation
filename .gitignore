@@ -9,4 +9,8 @@
 /Cargo.lock
 home-assistant/configs/nut/.env
 home-assistant/configs/frigate/.env
-frigate/config/.jwt_secret
+home-assistant/configs/mqtt/data/mosquitto.db
+home-assistant/configs/mqtt/data/
+frigate/config/*
+!frigate/config/config.yaml
+

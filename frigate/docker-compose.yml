@@ -11,7 +11,7 @@ services:
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - ./config:/config
-      - frigate_storage:/media/frigate
+      - /mnt/frigate:/media/frigate
       - type: tmpfs
         target: /tmp/cache
         tmpfs:

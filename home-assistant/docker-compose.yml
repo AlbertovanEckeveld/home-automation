@@ -10,6 +10,7 @@ services:
     privileged: true
     volumes:
       - ha_config:/config
+      - /mnt/images:/media
       - /etc/localtime:/etc/localtime:ro
       - /run/dbus:/run/dbus:ro
     environment:
