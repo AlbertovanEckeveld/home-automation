@@ -1,16 +1,93 @@
+# ==========================================
+# ENVIRONMENT FILES & SECRETS
+# ==========================================
+
 /target
 /records
 /.sqlx
-/.env
 /.vscode
 /.idea
 /.DS_Store
 ./config.toml
 /Cargo.lock
+
+# Ignore all environment files recursively
+**/.env
+**/.env.*
+**/*.env
+
+# Allow example files
+!**/.env.example
+!**/*.env.example
+
+# ==========================================
+# SSL CERTIFICATES & PRIVATE KEYS
+# ==========================================
+
+**/*.key
+**/*.pem
+**/*.p12
+**/*.pfx
+**/*.crt
+**/*.cer
+
+# ==========================================
+# DOCKER & APPLICATION DATA
+# ==========================================
+
+# Persistent application data
+**/data/
+**/media/
+**/logs/
+**/backups/
+**/volumes/
+
+# Authentik
+**/authentik/certs/
+
+# Bitwarden
+**/bitwarden/**/data/
+
+# GitLab
+**/gitlab/config/
+**/gitlab/data/
+
+# Pterodactyl
+**/pterodactyl/var/
+**/pterodactyl/storage/
+**/pterodactyl/logs/
+
+# Frigate
+frigate/config/*
+!frigate/config/config.example
+
+# Home Assistant
 home-assistant/configs/nut/.env
 home-assistant/configs/frigate/.env
 home-assistant/configs/mqtt/data/mosquitto.db
 home-assistant/configs/mqtt/data/
-frigate/config/*
-!frigate/config/config.example
+
+# ==========================================
+# DATABASE FILES
+# ==========================================
+
+**/*.sql
+**/*.sql.gz
+**/*.sqlite
+**/*.sqlite3
+**/*.db
+
+# ==========================================
+# LOGS & TEMPORARY FILES
+# ==========================================
+
+**/*.log
+**/*.tmp
+**/*.swp
+**/*.bak
+
+.DS_Store
+Thumbs.db
+
+
 

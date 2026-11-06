@@ -1,0 +1,232 @@
+
+name: infrastructure
+
+services:
+
+  # ==========================================
+  # AUTHENTIK
+  # ==========================================
+
+  authentik-server:
+    image: ghcr.io/goauthentik/server:latest
+    container_name: authentik-server
+    restart: unless-stopped
+    command: server
+    environment:
+      AUTHENTIK_SECRET_KEY: ${AUTHENTIK_SECRET_KEY}
+      AUTHENTIK_POSTGRESQL__HOST: authentik-db
+      AUTHENTIK_POSTGRESQL__USER: authentik
+      AUTHENTIK_POSTGRESQL__NAME: authentik
+      AUTHENTIK_POSTGRESQL__PASSWORD: ${AUTHENTIK_DB_PASSWORD}
+    ports:
+      - "8445:9000"
+    volumes:
+      - ./authentik/media:/media
+      - ./authentik/custom-templates:/templates
+    depends_on:
+      authentik-db:
+        condition: service_healthy
+    networks:
+      - authentik
+
+  authentik-worker:
+    image: ghcr.io/goauthentik/server:latest
+    container_name: authentik-worker
+    restart: unless-stopped
+    command: worker
+    environment:
+      AUTHENTIK_SECRET_KEY: ${AUTHENTIK_SECRET_KEY}
+      AUTHENTIK_POSTGRESQL__HOST: authentik-db
+      AUTHENTIK_POSTGRESQL__USER: authentik
+      AUTHENTIK_POSTGRESQL__NAME: authentik
+      AUTHENTIK_POSTGRESQL__PASSWORD: ${AUTHENTIK_DB_PASSWORD}
+    volumes:
+      - ./authentik/media:/media
+      - ./authentik/certs:/certs
+      - ./authentik/custom-templates:/templates
+    depends_on:
+      authentik-db:
+        condition: service_healthy
+    networks:
+      - authentik
+
+  authentik-db:
+    image: postgres:16-alpine
+    container_name: authentik-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: authentik
+      POSTGRES_DB: authentik
+      POSTGRES_PASSWORD: ${AUTHENTIK_DB_PASSWORD}
+    volumes:
+      - authentik-postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U authentik -d authentik"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - authentik
+
+  # ==========================================
+  # BITWARDEN - TURINGUARD
+  # ==========================================
+
+  bitwarden-turinguard:
+    image: ghcr.io/bitwarden/lite:2026.10.1
+    container_name: bitwarden-turinguard
+    restart: unless-stopped
+    env_file:
+      - ./bitwarden-turinguard/settings.env
+    ports:
+      - "8441:8443"
+    volumes:
+      - ./bitwarden-turinguard/data:/etc/bitwarden
+      - ./bitwarden-turinguard/logs:/var/log/bitwarden
+    depends_on:
+      - bitwarden-turinguard-db
+    networks:
+      - bitwarden-turinguard
+
+  bitwarden-turinguard-db:
+    image: mariadb:10
+    container_name: bitwarden-turinguard-db
+    restart: unless-stopped
+    environment:
+      MARIADB_DATABASE: bitwarden_vault
+      MARIADB_USER: bitwarden
+      MARIADB_PASSWORD: ${BW_TURINGUARD_DB_PASSWORD}
+      MARIADB_RANDOM_ROOT_PASSWORD: "true"
+    volumes:
+      - bitwarden-turinguard-db:/var/lib/mysql
+    networks:
+      - bitwarden-turinguard
+
+  # ==========================================
+  # BITWARDEN - ALBERTOVE
+  # ==========================================
+
+  bitwarden-albertove:
+    image: ghcr.io/bitwarden/lite:2026.10.1
+    container_name: bitwarden-albertove
+    restart: unless-stopped
+    env_file:
+      - ./bitwarden-albertove/settings.env
+    ports:
+      - "8442:8443"
+    volumes:
+      - ./bitwarden-albertove/data:/etc/bitwarden
+      - ./bitwarden-albertove/logs:/var/log/bitwarden
+    depends_on:
+      - bitwarden-albertove-db
+    networks:
+      - bitwarden-albertove
+
+  bitwarden-albertove-db:
+    image: mariadb:10
+    container_name: bitwarden-albertove-db
+    restart: unless-stopped
+    environment:
+      MARIADB_DATABASE: bitwarden_vault
+      MARIADB_USER: bitwarden
+      MARIADB_PASSWORD: ${BW_ALBERTOVE_DB_PASSWORD}
+      MARIADB_RANDOM_ROOT_PASSWORD: "true"
+    volumes:
+      - bitwarden-albertove-db:/var/lib/mysql
+    networks:
+      - bitwarden-albertove
+
+  # ==========================================
+  # GITLAB CE
+  # ==========================================
+
+  gitlab:
+    image: gitlab/gitlab-ce:latest
+    container_name: gitlab
+    hostname: git.turinguard.nl
+    restart: unless-stopped
+    shm_size: "256m"
+    environment:
+      GITLAB_OMNIBUS_CONFIG: |
+        external_url 'https://git.turinguard.nl'
+        gitlab_rails['gitlab_shell_ssh_port'] = 2222
+    ports:
+      - "8443:80"
+      - "2222:22"
+    volumes:
+      - ./gitlab/config:/etc/gitlab
+      - ./gitlab/logs:/var/log/gitlab
+      - ./gitlab/data:/var/opt/gitlab
+
+  # ==========================================
+  # PTERODACTYL PANEL
+  # ==========================================
+
+  pterodactyl-panel:
+    image: pterodactyl-panel:2.0-local
+    container_name: pterodactyl-panel
+    restart: unless-stopped
+    ports:
+      - "8444:80"
+    volumes:
+      - ./pterodactyl/var:/app/var
+      - ./pterodactyl/nginx:/etc/nginx/http.d
+      - ./pterodactyl/logs:/app/storage/logs
+      - ./pterodactyl/extensions:/app/extensions
+      - ./pterodactyl/assets:/app/public/assets/extensions
+    depends_on:
+      pterodactyl-db:
+        condition: service_healthy
+      pterodactyl-redis:
+        condition: service_started
+    networks:
+      - pterodactyl
+
+  pterodactyl-db:
+    image: mariadb:11.4
+    container_name: pterodactyl-db
+    restart: unless-stopped
+    environment:
+      MARIADB_DATABASE: panel
+      MARIADB_USER: pterodactyl
+      MARIADB_PASSWORD: ${PTERODACTYL_DB_PASSWORD}
+      MARIADB_RANDOM_ROOT_PASSWORD: "true"
+    volumes:
+      - pterodactyl-db:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - pterodactyl
+
+  pterodactyl-redis:
+    image: redis:7.4-alpine
+    container_name: pterodactyl-redis
+    restart: unless-stopped
+    volumes:
+      - pterodactyl-redis:/data
+    networks:
+      - pterodactyl
+
+# ==========================================
+# NETWORKS
+# ==========================================
+
+networks:
+  authentik:
+  bitwarden-turinguard:
+  bitwarden-albertove:
+  pterodactyl:
+
+# ==========================================
+# PERSISTENT VOLUMES
+# ==========================================
+
+volumes:
+  authentik-postgres:
+  bitwarden-turinguard-db:
+  bitwarden-albertove-db:
+  pterodactyl-db:
+  pterodactyl-redis:
